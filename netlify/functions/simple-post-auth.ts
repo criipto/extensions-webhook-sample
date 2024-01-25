@@ -5,6 +5,7 @@ const jwks = jose.createRemoteJWKSet(new URL('https://extensions-test.criipto.co
 
 const handler: Handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false;
+  console.log(JSON.stringify(event, null, 2));
   if (event.httpMethod !== 'POST') return {statusCode: 405};
 
   const authorization = event.headers['Authorization'];
