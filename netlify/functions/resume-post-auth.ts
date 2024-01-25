@@ -30,7 +30,7 @@ const handler: Handler = async (event, context) => {
         headers: {
           Location: `https://extensions-by-criipto-webhook-sample.netlify.app/terms?resumeUrl=${encodeURIComponent(body.resumeUrl)}`
         }
-      }
+      };
     }
     
     if (body.event === 'post-auth-resume-event-1.0') {
@@ -39,10 +39,10 @@ const handler: Handler = async (event, context) => {
         statusCode: 200,
         body: JSON.stringify({
           claims: {
-            'https://extensions-by-criipto-webhook-sample.netlify.app/terms': resumedUrl.searchParams.has('accepted') ? 'accepted' : 'rejected';
+            'https://extensions-by-criipto-webhook-sample.netlify.app/terms': resumedUrl.searchParams.has('accepted') ? 'accepted' : 'rejected'
           }
         })
-      }
+      };
     }
 
     throw new Error(`Unknown event: ${body.event}`);
