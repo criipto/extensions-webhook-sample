@@ -20,9 +20,7 @@ const handler: Handler = async (event, context) => {
     });
 
     // TODO: add jti validation for replay detection
-
     const body = JSON.parse(event.body!);
-    console.log(body);
 
     if (body.event === 'post-auth-event-1.0') {
       return {
