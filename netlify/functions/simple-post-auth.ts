@@ -8,11 +8,14 @@ const handler: Handler = async (event, context) => {
   console.log(JSON.stringify(event, null, 2));
   if (event.httpMethod !== 'POST') return {statusCode: 405};
 
-  const authorization = event.headers['Authorization'];
+  const authorization = event.headers['authorization'];
+  console.log(authorization);
   if (!authorization) return {statusCode: 401, body: JSON.stringify({message: 'no bearer token'})};
   const bearer = authorization.startsWith('Bearer') ? authorization.replace('Bearer ', '') : null;
+  console.log(bearer);
   if (!bearer) return {statusCode: 401, body: JSON.stringify({message: 'no bearer token'})};
 
+  // Ideally validate audience as well, but audience is not known until after install
   const payload = await jose.jwtVerify(bearer, jwks, {
     issuer: 'https://extensions-test.criipto.com/service/.well-known/jwks',
     clockTolerance: '5 minutes',
