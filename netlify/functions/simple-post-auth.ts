@@ -27,11 +27,11 @@ const handler: Handler = async (event, context) => {
       statusCode: 200,
       body: JSON.stringify({
         claims: {
-          'https://criipto-extensions-webhook-sample.netlify.app/simple-post-auth/string': 'hello-world',
-          'https://criipto-extensions-webhook-sample.netlify.app/simple-post-auth/number': 123456,
-          'https://criipto-extensions-webhook-sample.netlify.app/simple-post-auth/boolean': true,
-          "https://criipto-extensions-webhook-sample.netlify.app/simple-post-auth/array": ["hello-world",123456,true,{"hello":"world"}],
-          'https://criipto-extensions-webhook-sample.netlify.app/simple-post-auth/complex': {
+          'https://extensions-by-criipto-webhook-sample.netlify.app/.netlify/functions/simple-post-auth/string': 'hello-world',
+          'https://extensions-by-criipto-webhook-sample.netlify.app/.netlify/functions/simple-post-auth/number': 123456,
+          'https://extensions-by-criipto-webhook-sample.netlify.app/.netlify/functions/simple-post-auth/boolean': true,
+          "https://extensions-by-criipto-webhook-sample.netlify.app/.netlify/functions/simple-post-auth/array": ["hello-world",123456,true,{"hello":"world"}],
+          'https://extensions-by-criipto-webhook-sample.netlify.app/.netlify/functions/simple-post-auth/complex': {
             hello: 'world'
           }
         }
