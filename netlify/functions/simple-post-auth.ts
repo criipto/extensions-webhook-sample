@@ -5,22 +5,21 @@ const jwks = jose.createRemoteJWKSet(new URL('https://extensions-test.criipto.co
 
 const handler: Handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false;
-  console.log(JSON.stringify(event, null, 2));
   if (event.httpMethod !== 'POST') return {statusCode: 405};
 
   const authorization = event.headers['authorization'];
-  console.log(authorization);
   if (!authorization) return {statusCode: 401, body: JSON.stringify({message: 'no bearer token'})};
   const bearer = authorization.startsWith('Bearer') ? authorization.replace('Bearer ', '') : null;
-  console.log(bearer);
   if (!bearer) return {statusCode: 401, body: JSON.stringify({message: 'no bearer token'})};
 
   // Ideally validate audience as well, but audience is not known until after install
   const payload = await jose.jwtVerify(bearer, jwks, {
-    issuer: 'https://extensions-test.criipto.com/service/.well-known/jwks',
+    issuer: 'https://extensions-test.criipto.com/service',
     clockTolerance: '5 minutes',
     maxTokenAge: '5 minutes'
   });
+
+  // TODO: add jti validation for replay detection
 
   try {
 
@@ -42,6 +41,10 @@ const handler: Handler = async (event, context) => {
     if (err instanceof jose.errors.JWTInvalid) return {statusCode: 401, body: JSON.stringify({message: 'jwt invalid'})};
     if (err instanceof jose.errors.JWSInvalid) return {statusCode: 401, body: JSON.stringify({message: 'jwt invalid'})};
     if (err instanceof jose.errors.JWTExpired) return {statusCode: 401, body: JSON.stringify({message: 'jwt expired'})};
+    if (err instanceof jose.errors.JWTClaimValidationFailed) {
+      if (err.claim === 'iss') return {statusCode: 401, body: JSON.stringify({message: 'invalid issuer'})};
+      return {statusCode: 401, body: JSON.stringify({message: 'jwt expired'})};
+    }
     return {statusCode: 500, body: JSON.stringify({message: err?.toString()})}
   }
 }
