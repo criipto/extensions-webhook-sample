@@ -11,7 +11,6 @@ const handler: Handler = async (event, context) => {
   if (!authorization) return {statusCode: 401, body: JSON.stringify({message: 'no bearer token'})};
   const bearer = authorization.startsWith('Bearer') ? authorization.replace('Bearer ', '') : null;
   if (!bearer) return {statusCode: 401, body: JSON.stringify({message: 'no bearer token'})};
-
   try {
     // Ideally validate audience as well, but audience is not known until after install
     const payload = await jose.jwtVerify(bearer, jwks, {
@@ -22,17 +21,23 @@ const handler: Handler = async (event, context) => {
 
     // TODO: add jti validation for replay detection
 
+    const body = JSON.parse(event.body!);
+    console.log(body);
+
+    if (body.event === 'post-auth-event-1.0') {
+      return {
+        statusCode: 303,
+        headers: {
+          Location: `https://extensions-by-criipto-webhook-sample.netlify.app/terms?resume=${encodeURIComponent(body.resumeUrl)}`
+        }
+      }
+    }
+
     return {
       statusCode: 200,
       body: JSON.stringify({
         claims: {
-          'https://extensions-by-criipto-webhook-sample.netlify.app/.netlify/functions/simple-post-auth/string': 'hello-world',
-          'https://extensions-by-criipto-webhook-sample.netlify.app/.netlify/functions/simple-post-auth/number': 123456,
-          'https://extensions-by-criipto-webhook-sample.netlify.app/.netlify/functions/simple-post-auth/boolean': true,
-          "https://extensions-by-criipto-webhook-sample.netlify.app/.netlify/functions/simple-post-auth/array": ["hello-world",123456,true,{"hello":"world"}],
-          'https://extensions-by-criipto-webhook-sample.netlify.app/.netlify/functions/simple-post-auth/complex': {
-            hello: 'world'
-          }
+          'https://extensions-by-criipto-webhook-sample.netlify.app/terms': 'accepted'
         }
       })
     }

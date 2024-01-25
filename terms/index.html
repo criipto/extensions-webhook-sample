@@ -1,0 +1,11 @@
+<html>
+  <body>
+    <a href="" id="terms">Accept terms</a>
+    <script type="text/javascript">
+      console.log(window.location);
+
+      const params = new URLSearchParams(window.location.search);
+      document.getElementById('terms').href = params.get('resumeUrl');
+    </script>
+  </body>
+</html>
