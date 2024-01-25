@@ -1,0 +1,17 @@
+{
+  "name": "extensions-webhook-sample",
+  "version": "1.0.0",
+  "description": "A sample webhook extension for Criipto Verify",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@netlify/functions": "^2.5.1"
+  },
+  "dependencies": {
+    "jose": "^5.2.0"
+  }
+}
