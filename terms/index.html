@@ -7,8 +7,8 @@
 
       const params = new URLSearchParams(window.location.search);
       const resumeUrl = new URL(params.get('resumeUrl'));
-      const acceptUrl = new URL(resumeUrl.href).searchParams.set('accepted', true);
-      const rejectUrl = new URL(resumeUrl.href).searchParams.set('rejected', true);
+      const acceptUrl = new URL(resumeUrl.href).searchParams.set('accepted', "true");
+      const rejectUrl = new URL(resumeUrl.href).searchParams.set('rejected', "true");
       document.getElementById('accept_terms').href = acceptUrl.href;
       document.getElementById('reject_terms').href = rejectUrl.href;
     </script>

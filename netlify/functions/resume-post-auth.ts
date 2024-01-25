@@ -28,19 +28,24 @@ const handler: Handler = async (event, context) => {
       return {
         statusCode: 303,
         headers: {
-          Location: `https://extensions-by-criipto-webhook-sample.netlify.app/terms?resume=${encodeURIComponent(body.resumeUrl)}`
+          Location: `https://extensions-by-criipto-webhook-sample.netlify.app/terms?resumeUrl=${encodeURIComponent(body.resumeUrl)}`
         }
       }
     }
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        claims: {
-          'https://extensions-by-criipto-webhook-sample.netlify.app/terms': 'accepted'
-        }
-      })
+    
+    if (body.event === 'post-auth-resume-event-1.0') {
+      const resumedUrl = new URL(body.resumeRequest.url);
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          claims: {
+            'https://extensions-by-criipto-webhook-sample.netlify.app/terms': resumedUrl.searchParams.has('accepted') ? 'accepted' : 'rejected';
+          }
+        })
+      }
     }
+
+    throw new Error(`Unknown event: ${body.event}`);
   } catch (err) {
     if (err instanceof jose.errors.JWTInvalid) return {statusCode: 401, body: JSON.stringify({message: 'jwt invalid'})};
     if (err instanceof jose.errors.JWSInvalid) return {statusCode: 401, body: JSON.stringify({message: 'jwt invalid'})};
