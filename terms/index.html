@@ -1,11 +1,16 @@
 <html>
   <body>
-    <a href="" id="terms">Accept terms</a>
+    <a href="" id="accept_terms">Accept terms</a> - 
+    <a href="" id="reject_terms">Reject terms</a>
     <script type="text/javascript">
       console.log(window.location);
 
       const params = new URLSearchParams(window.location.search);
-      document.getElementById('terms').href = params.get('resumeUrl');
+      const resumeUrl = new URL(params.get('resumeUrl'));
+      const acceptUrl = new URL(resumeUrl.href).searchParams.set('accepted', true);
+      const rejectUrl = new URL(resumeUrl.href).searchParams.set('rejected', true);
+      document.getElementById('accept_terms').href = acceptUrl.href;
+      document.getElementById('reject_terms').href = rejectUrl.href;
     </script>
   </body>
 </html>

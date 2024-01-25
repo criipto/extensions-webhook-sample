@@ -15,7 +15,7 @@ const handler: Handler = async (event, context) => {
   try {
     // Ideally validate audience as well, but audience is not known until after install
     const payload = await jose.jwtVerify(bearer, jwks, {
-      issuer: 'https://extensions-test.criipto.com/service',
+      issuer: ['https://extensions.criipto.com/service', 'https://extensions-test.criipto.com/service', 'https://deploy-preview-64.extensions-test.criipto.com/service'],
       clockTolerance: '5 minutes',
       maxTokenAge: '5 minutes'
     });
