@@ -3,6 +3,14 @@ import * as jose from 'jose';
 
 const jwks = jose.createRemoteJWKSet(new URL('https://extensions-test.criipto.com/service/.well-known/jwks'));
 
+function tryParseURL(input: string): URL | null {
+  try {
+    return new URL(input);
+  } catch (err) {
+    return null;
+  }
+}
+
 const handler: Handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false;
   if (event.httpMethod !== 'POST') return {statusCode: 405};
@@ -32,7 +40,8 @@ const handler: Handler = async (event, context) => {
     }
     
     if (body.event === 'post-auth-resume-event-1.0') {
-      const resumedUrl = new URL(body.resumeRequest.url);
+      const resumedUrl = tryParseURL(body.resumeRequest.url);
+      if (!resumedUrl) throw new Error(`body.resumeRequest.url '${body.resumeRequest.url}' was not a valid URL`)
       return {
         statusCode: 200,
         body: JSON.stringify({
